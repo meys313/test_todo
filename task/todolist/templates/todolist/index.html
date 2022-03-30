@@ -1,0 +1,165 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link type="text/css" href="{% static 'todolist/css/styles.css' %}" rel="stylesheet" />
+    <title>{{title}}</title>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
+      rel="stylesheet"
+    />
+    <!-- FOR MEDIA -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+
+
+
+</head>
+<body>
+    {% verbatim %}
+    <div id="app">
+      <v-app>
+        <v-main class="">
+          <h2 class="text-center">To do List Vue + Django</h2>
+
+          <form @submit.prevent="addNewTask" class="main-form-add-new-task">
+            <!-- input value new task -->
+            <v-text-field
+              placeholder="new Task"
+              v-model.trim="inputNewTask"
+            ></v-text-field>
+            <!-- textarea -->
+            <v-textarea
+              name="input-7-1"
+              label="description Task"
+              value=""
+              v-model.trim="textareaNewTask"
+              hint="Hint text"
+            ></v-textarea>
+
+            <!-- btn submit add new task -->
+            <v-btn depressed color="primary" type="submit">
+              add new Task
+            </v-btn>
+          </form>
+
+          <hr />
+          <h4 class="text-center">All tasks</h4>
+
+          <!-- Выводим список задач, что получили с бека -->
+          <div
+            v-for="(item,index) in arrayWithAllToDoList"
+            :key="index"
+            class="item-task"
+          >
+            <p>ID - {{item.id}}</p>
+            <p>Name Task - {{item.name}}</p>
+            <p>Description Task - {{item.address.geo}}</p>
+
+            <v-btn depressed color="warning" @click="deleteItem(item.id)">
+              delete
+            </v-btn>
+            <v-btn
+              depressed
+              color="warning"
+              @click="editItem(item.id, item.name, item.description)"
+            >
+              editItem
+            </v-btn>
+          </div>
+        </v-main>
+      </v-app>
+    </div>
+    {% endverbatim %}
+    <!-- END START -->
+
+    <!-- VUE V2 + VUETIFY CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+
+    <!-- Vue modules -->
+    <script>
+      new Vue({
+        el: "#app",
+        vuetify: new Vuetify(),
+        created() {
+          this.getAllTasksWithBackEnd();
+        },
+        data() {
+          return {
+            arrayWithAllToDoList: [],
+            inputNewTask: "",
+            textareaNewTask: ""
+          };
+        },
+        methods: {
+          editItem(id, valueInput, valueTextarea) {
+            console.log(id, valueInput, valueTextarea);
+          },
+
+          deleteItem(id) {
+            // id как и в бд
+            console.log(id);
+
+            const dataForBackJSON = JSON.stringify({ id: id });
+            // пуляем запрос POST с новой записью
+            fetch("url", {
+              methods: "DELETE",
+              headers: {
+                "Content-Type": "application/json;charset=utf-8"
+              },
+              body: dataForBackJSON
+            });
+          },
+
+          getAllTasksWithBackEnd() {
+            // пуляем запрос на бек, откуда хотим получить данные
+            // заносим их в свой массив
+            fetch("http://127.0.0.1:8000/api/task/")
+              .then((res) => res.json())
+              .then((res) => (this.arrayWithAllToDoList = res));
+          },
+
+          addNewTask() {
+            // проверяем, если инпут и текстареа пустые , выходим и не отправляем данные
+            if (this.inputNewTask === "" && this.textareaNewTask === "") {
+              return;
+            }
+            // закидываем наши данные в один обьект
+            const objData = {
+              nameTask: this.inputNewTask,
+              descriptionTask: this.textareaNewTask
+            };
+            console.log("Tests Data - ", objData);
+            // приводим обьект к строке для бека
+            const dataForBackJSON = JSON.stringify(objData);
+            // пуляем запрос POST с новой записью
+            fetch("url", {
+              methods: "POST",
+              headers: {
+                "Content-Type": "application/json;charset=utf-8"
+              },
+              body: dataForBackJSON
+            });
+
+            // reset data
+            this.inputNewTask = "";
+            this.textareaNewTask = "";
+          }
+        }
+      });
+    </script>
+</body>
+</html>

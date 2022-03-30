@@ -1,0 +1,15 @@
+.main-wrapper {
+}
+.main-form-add-new-task {
+	margin: 0 auto;
+	width: 300px;
+	background: pink;
+	padding: 15px;
+	margin-top: 50px;
+}
+.item-task {
+	width: 300px;
+	background: yellow;
+	padding: 15px;
+	margin: 10px auto;
+}
