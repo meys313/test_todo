@@ -66,7 +66,7 @@
           >
             <p>ID - {{item.id}}</p>
             <p>Name Task - {{item.name}}</p>
-            <p>Description Task - {{item.address.geo}}</p>
+            <p>Description Task - {{item.text}}</p>
 
             <v-btn depressed color="warning" @click="deleteItem(item.id)">
               delete
@@ -89,8 +89,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
 
-    <!-- Vue modules -->
-    <script>
+     <script>
       new Vue({
         el: "#app",
         vuetify: new Vuetify(),
@@ -111,17 +110,19 @@
 
           deleteItem(id) {
             // id как и в бд
+            // ТИП ЧИСЛО
             console.log(id);
 
             const dataForBackJSON = JSON.stringify({ id: id });
             // пуляем запрос POST с новой записью
-            fetch("url", {
-              methods: "DELETE",
+            fetch(`http://127.0.0.1:8000/api/task/${id}`, {
+              method: "DELETE",
               headers: {
                 "Content-Type": "application/json;charset=utf-8"
               },
               body: dataForBackJSON
             });
+            console.log(dataForBackJSON);
           },
 
           getAllTasksWithBackEnd() {
@@ -139,21 +140,30 @@
             }
             // закидываем наши данные в один обьект
             const objData = {
-              nameTask: this.inputNewTask,
-              descriptionTask: this.textareaNewTask
+              name: this.inputNewTask,
+              text: this.textareaNewTask
             };
             console.log("Tests Data - ", objData);
             // приводим обьект к строке для бека
             const dataForBackJSON = JSON.stringify(objData);
             // пуляем запрос POST с новой записью
-            fetch("url", {
-              methods: "POST",
+
+            fetch("http://127.0.0.1:8000/api/task/", {
+              method: "POST",
               headers: {
                 "Content-Type": "application/json;charset=utf-8"
               },
               body: dataForBackJSON
             });
 
+            // fetch("https://jsonplaceholder.typicode.com/posts", {
+            //   methods: "POST",
+            //   headers: {
+            //     "Content-Type": "application/json;charset=utf-8"
+            //   },
+            //   body: dataForBackJSON
+            // });
+            console.log(typeof objData);
             // reset data
             this.inputNewTask = "";
             this.textareaNewTask = "";
