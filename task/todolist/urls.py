@@ -1,13 +1,10 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 
-from .views import TaskIndex, TaskViewSet
-from rest_framework import routers
+from .views import TaskIndex
 
-router = routers.DefaultRouter()
-router.register(r'task', TaskViewSet, basename='task')
+
 
 urlpatterns = [
     path('', TaskIndex.as_view()),
-    path('api/', include(router.urls))
 ]
