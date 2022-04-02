@@ -115,7 +115,7 @@
 
             const dataForBackJSON = JSON.stringify({ id: id });
             // пуляем запрос POST с новой записью
-            fetch(`http://127.0.0.1:8000/api/task/${id}`, {
+            fetch(`http://127.0.0.1:8000/api/delete/${id}`, {
               method: "DELETE",
               headers: {
                 "Content-Type": "application/json;charset=utf-8"
@@ -123,12 +123,13 @@
               body: dataForBackJSON
             });
             console.log(dataForBackJSON);
+            console.log(`http://127.0.0.1:8000/api/delete/${id}`)
           },
 
           getAllTasksWithBackEnd() {
             // пуляем запрос на бек, откуда хотим получить данные
             // заносим их в свой массив
-            fetch("http://127.0.0.1:8000/api/task/")
+            fetch("http://127.0.0.1:8000/api/list/")
               .then((res) => res.json())
               .then((res) => (this.arrayWithAllToDoList = res));
           },
@@ -148,7 +149,7 @@
             const dataForBackJSON = JSON.stringify(objData);
             // пуляем запрос POST с новой записью
 
-            fetch("http://127.0.0.1:8000/api/task/", {
+            fetch("http://127.0.0.1:8000/api/create/", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json;charset=utf-8"
